@@ -8,6 +8,7 @@ import java.util.Map;
  */
 public class State {
 	private String m_name;
+	// part of transition function
 	private HashMap<String, String> m_transitionMap;
 
 	public State(String name) {

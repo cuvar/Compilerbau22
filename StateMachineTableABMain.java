@@ -6,7 +6,7 @@ public class StateMachineTableABMain {
 	public static void main(String[] args) throws Exception {
 		compiler.StateMachine abMachine = new StateMachineTableAB();
 		OutputStreamWriter outStream = new OutputStreamWriter(System.out, "UTF-8");
-		abMachine.process("ABB", outStream);
+		abMachine.process("ABAB", outStream);
 
         System.out.println();
         System.out.println(abMachine.asDot());
