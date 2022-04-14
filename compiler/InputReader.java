@@ -48,7 +48,7 @@ public class InputReader implements InputReaderIntf, Cloneable {
 
 	public void traceHead(OutputStreamWriter outStream) throws Exception {
 		outStream.write("IN");
-		for (int i = 2; i != m_input.length(); i++) {
+		for (int i = 2; i < m_input.length(); i++) {
  	        outStream.write(' ');
 		}		
 	}
