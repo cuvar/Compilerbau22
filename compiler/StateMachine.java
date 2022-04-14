@@ -8,7 +8,7 @@ import java.util.Set;
  * deterministic finish state machine with transition table
  */
 public abstract class StateMachine extends StateMachineBase {
-	// set of states 
+	// state transition table
 	protected HashMap<String, State> m_stateMap;
 	
 	public StateMachine() {
@@ -76,12 +76,11 @@ public abstract class StateMachine extends StateMachineBase {
 		return result;
 	}
 
-	public void addTransitionForLetter(State state, String targetState) {
-	    for (char c = 'A'; c <= 'Z'; c++) {
-	        state.addTransition(c, targetState);
-	    }
-        for (char c = 'a'; c <= 'z'; c++) {
-            state.addTransition(c, targetState);
-        }
+	public void addTransitionForAllAsciiSymbolsExceptQuotationMark(State state, String targetState){
+		for(char c = '!'; c <= '}'; c++){
+			if(c != '"') {
+				state.addTransition(c, targetState);
+			}
+		}
 	}
 }
