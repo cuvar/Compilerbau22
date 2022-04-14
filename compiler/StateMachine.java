@@ -8,15 +8,15 @@ import java.util.Set;
  * deterministic finish state machine with transition table
  */
 public abstract class StateMachine extends StateMachineBase {
-	// set of states 
+	// set of states
 	protected HashMap<String, State> m_stateMap;
-	
+
 	public StateMachine() {
 		super();
 		m_stateMap = new HashMap<String, State>();
 		initStateTable();
 	}
-	
+
 	/**
 	 * initialize state transition table
 	 */
@@ -27,7 +27,7 @@ public abstract class StateMachine extends StateMachineBase {
 		// look for transition on (current state, current input)
 		char curChar = m_input.currentChar();
 		State curState = m_stateMap.get(m_state);
-		String nextStateString = curState.getTransition(curChar); 
+		String nextStateString = curState.getTransition(curChar);
         if (nextStateString == null) {
         	// no transition => error
         	m_state = "error";
@@ -84,4 +84,10 @@ public abstract class StateMachine extends StateMachineBase {
             state.addTransition(c, targetState);
         }
 	}
+
+    public void addTransitionForNumber(State state, String targetState) {
+        for (char i = '0'; i <= '9'; i++) {
+            state.addTransition(i, targetState);
+        }
+    }
 }
