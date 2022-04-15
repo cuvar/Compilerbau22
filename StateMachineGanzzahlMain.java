@@ -3,12 +3,12 @@ import java.io.OutputStreamWriter;
 public class StateMachineGanzzahlMain {
 	public static void main(String[] args) throws Exception {
 
-		compiler.StateMachine commentMachine = new StateMachineGanzzahl();
+		compiler.StateMachine ganzzahlMachine = new StateMachineGanzzahl();
 		OutputStreamWriter outStream = new OutputStreamWriter(System.out, "UTF-8");
-		commentMachine.process("123456789", outStream);
+		ganzzahlMachine.process("102", outStream);
 
-//		System.out.println();
-//		System.out.println(commentMachine.asDot());
-//		System.out.println();
+		System.out.println();
+		System.out.println(ganzzahlMachine.asDot());
+		System.out.println();
 	}
 }

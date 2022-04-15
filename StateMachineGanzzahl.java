@@ -8,22 +8,22 @@ public class StateMachineGanzzahl extends StateMachine {
 		compiler.State end = new compiler.State("end");
 		start.addTransition('0', "end");
 		start.addTransition('-', "negative");
-		compiler.State numberOneToNine = new compiler.State("numberOneToNine");
+		compiler.State numberZeroToNine = new compiler.State("numberZeroToNine");
 		compiler.State negative = new compiler.State("negative");
 
 		for (int i = 0; i <= 9; i++) {
-			numberOneToNine.addTransition((char) (i + '0'), "numberOneToNine");
+			numberZeroToNine.addTransition((char) (i + '0'), "numberZeroToNine");
 		}
 		for (int i = 1; i <= 9; i++) {
-			start.addTransition((char) (i + '0'), "numberOneToNine");
+			start.addTransition((char) (i + '0'), "numberZeroToNine");
 		}
 		for (int i = 1; i <= 9; i++) {
-			negative.addTransition((char) (i + '0'), "numberOneToNine");
+			negative.addTransition((char) (i + '0'), "numberZeroToNine");
 		}
 
 		m_stateMap.put("start", start);
 
-		m_stateMap.put("numberOneToNine", numberOneToNine);
+		m_stateMap.put("numberZeroToNine", numberZeroToNine);
 		m_stateMap.put("end", end);
 		m_stateMap.put("negative", negative);
 
@@ -36,7 +36,7 @@ public class StateMachineGanzzahl extends StateMachine {
 
 	@Override
 	public boolean isFinalState() {
-		return (m_state.equals("numberOneToNine") || m_state.equals("end"));
+		return (m_state.equals("numberZeroToNine") || m_state.equals("end"));
 	}
 
 }
