@@ -30,7 +30,7 @@ public class StateMachineIdentifier extends compiler.StateMachine {
     }
 
     public String getName() {
-        return "MultiLineComment";
+        return "Identifier";
     }
 
 }
