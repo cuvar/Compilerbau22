@@ -1,30 +1,26 @@
 import compiler.StateMachine;
 import compiler.State;
 
-public class CharStateMachine extends StateMachine {
+public class StateMachineChar extends StateMachine {
 
 	@Override
 	public void initStateTable() {
 		State start = new State("start");
-		start.addTransition('\'', "afterK");
+		start.addTransition('\'', "afterQuote");
 		m_stateMap.put("start", start);
-		
-		State afterK = new State("afterK");
+
+		State afterQuote = new State("afterQuote");
 		for ( char c = ' '; c <= '~'; c++) {
-			afterK.addTransition(c, "beforeK");
+			afterQuote.addTransition(c, "beforeQuote");
 		}
-		m_stateMap.put("afterK", afterK);		
+		m_stateMap.put("afterQuote", afterQuote);
 		
-		State beforeK = new State("beforeK");
-		beforeK.addTransition('\'', "end");
-		m_stateMap.put("beforeK", beforeK);
+		State beforeQuote = new State("beforeQuote");
+		beforeQuote.addTransition('\'', "end");
+		m_stateMap.put("beforeQuote", beforeQuote);
 		
 		State end = new State("end");
 		m_stateMap.put("end", end);
-		
-		
-		
-
 	}
 
 	@Override
