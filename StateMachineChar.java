@@ -31,6 +31,11 @@ public class StateMachineChar extends StateMachine {
 	@Override
 	public boolean isFinalState() {
 		return (m_state.equals("end"));	
-		}
+	}
+
+    public String getName() {
+        return "Decimals";
+    }
+
 
 }
