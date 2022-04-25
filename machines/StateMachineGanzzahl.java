@@ -1,3 +1,5 @@
+package machines;
+
 import compiler.StateMachine;
 
 public class StateMachineGanzzahl extends StateMachine {

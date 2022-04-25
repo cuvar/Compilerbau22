@@ -1,4 +1,6 @@
 
+import machines.StateMachineIdentifier;
+
 import java.io.OutputStreamWriter;
 
 public class StateMachineIdentifierMain {

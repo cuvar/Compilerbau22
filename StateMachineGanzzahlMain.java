@@ -1,3 +1,5 @@
+import machines.StateMachineGanzzahl;
+
 import java.io.OutputStreamWriter;
 
 public class StateMachineGanzzahlMain {

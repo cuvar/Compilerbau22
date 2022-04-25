@@ -1,4 +1,6 @@
 
+import machines.StateMachineChar;
+
 import java.io.OutputStreamWriter;
 
 public class StateMachineCharMain {

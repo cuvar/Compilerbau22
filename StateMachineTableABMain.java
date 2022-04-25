@@ -1,4 +1,6 @@
 
+import machines.StateMachineTableAB;
+
 import java.io.OutputStreamWriter;
 
 public class StateMachineTableABMain {

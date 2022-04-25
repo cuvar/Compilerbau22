@@ -1,4 +1,6 @@
 
+import machines.StateMachineDecimals;
+
 import java.io.OutputStreamWriter;
 
 public class StateMachineDecimalsMain {
