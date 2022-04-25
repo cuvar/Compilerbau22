@@ -37,6 +37,7 @@ public class Lexer {
         }
     }
     
+    public void addMachine(MachineBase machine)
     
     public void process() {
     // while input available    
