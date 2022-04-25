@@ -39,4 +39,9 @@ public class StateMachineGanzzahl extends StateMachine {
 		return (m_state.equals("numberZeroToNine") || m_state.equals("end"));
 	}
 
+   @Override
+    public String getName() {
+        return "Ganzzahl";
+    }
+
 }
