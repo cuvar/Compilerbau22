@@ -36,7 +36,7 @@ public class StateMachineChar extends StateMachine {
 	}
 
     public String getName() {
-        return "Decimals";
+        return "Char";
     }
 
 
