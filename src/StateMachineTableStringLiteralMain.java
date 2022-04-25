@@ -1,4 +1,6 @@
 
+import machines.StateMachineTableStringLiteral;
+
 import java.io.OutputStreamWriter;
 
 public class StateMachineTableStringLiteralMain {

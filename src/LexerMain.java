@@ -1,3 +1,8 @@
+import machines.StateMachineDecimals;
+import machines.StateMachineGanzzahl;
+import machines.StateMachineIdentifier;
+import machines.StateMachineKeywords;
+
 import java.io.OutputStreamWriter;
 
 public class LexerMain {

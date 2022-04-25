@@ -1,7 +1,7 @@
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 
 import compiler.StateMachine;
+import machines.StateMachineWhitespaces;
 
 public class StateMachineWhitespacesMain {
 

@@ -1,4 +1,5 @@
-import compiler.State;
+package machines;
+
 /**
  * sample state machine
  * accept Line Comment

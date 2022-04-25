@@ -1,3 +1,5 @@
+package machines;
+
 /**
  * sample state machine
  * accept AB*
