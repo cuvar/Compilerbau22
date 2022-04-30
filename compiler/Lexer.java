@@ -75,6 +75,12 @@ public class Lexer {
                 bestMatch = machine;
             }
         }
+        if (bestMatch.m_machine == null) {
+            Token errorToken = new Token();
+            errorToken.m_type = TokenIntf.Type.EOF;
+            errorToken.m_value = new String();
+            return errorToken;
+        }
         // set next word [start pos, final pos)
         String nextWord = m_input.substring(0, bestMatch.m_acceptPos);
         m_input = m_input.substring(bestMatch.m_acceptPos);
@@ -111,13 +117,17 @@ public class Lexer {
             // break on failure
             if (curWord.m_type == Token.Type.EOF) {
                 outStream.write("ERROR\n");
+                outStream.flush();
                 break;
+            } else if (curWord.m_type == Token.Type.WHITESPACE) {
+                continue;
+            } else {
+                // print word
+                outStream.write(curWord.toString());
+                outStream.write("\n");
+                outStream.flush();
+                tokenListe.add(curWord);
             }
-            // print word
-            //outStream.write(curWord.toString());
-            //outStream.write("\n");
-            //outStream.flush();
-            tokenListe.add(curWord);
         }
     }
 
