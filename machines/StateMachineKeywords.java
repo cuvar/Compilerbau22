@@ -1,14 +1,17 @@
 package machines;
 
 import compiler.StateMachine;
+import compiler.TokenIntf;
 
 public class StateMachineKeywords extends StateMachine {
 	private String m_keyword;
+	private TokenIntf.Type m_tokenType;
     private String m_endstate;
 	
 	
-	public StateMachineKeywords(String keyword) {
+	public StateMachineKeywords(String keyword, TokenIntf.Type tokenType) {
 	    m_keyword = keyword;
+	    m_tokenType = tokenType;
 	    initStateTableDelayed();
 	}
 	
@@ -44,9 +47,8 @@ public class StateMachineKeywords extends StateMachine {
 		m_stateMap.put(condition, end);
 	}
 
-	   public String getName() {
-	        return "Keywords";
-	    }
-
+    public TokenIntf.Type getType() {
+        return m_tokenType;
+    }
 
 }

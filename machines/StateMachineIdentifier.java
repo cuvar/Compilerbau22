@@ -1,5 +1,7 @@
 package machines;
 
+import compiler.TokenIntf;
+
 /**
  * sample state machine
  * accept AB*
@@ -31,8 +33,9 @@ public class StateMachineIdentifier extends compiler.StateMachine {
         m_stateMap.put("end", end);
     }
 
-    public String getName() {
-        return "Identifier";
+    public TokenIntf.Type getType() {
+        return TokenIntf.Type.IDENT;
     }
+
 
 }

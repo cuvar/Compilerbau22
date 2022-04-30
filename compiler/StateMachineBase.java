@@ -103,8 +103,8 @@ public abstract class StateMachineBase extends MachineBase implements Cloneable 
 		return theClone;
 	}
 	
-	public String getName() {
-	    return "<unnamed>";
-	}
+    public TokenIntf.Type getType() {
+        return TokenIntf.Type.EOF;
+    }
 
 }

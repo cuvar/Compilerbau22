@@ -1,6 +1,7 @@
 package machines;
 
 import compiler.StateMachine;
+import compiler.TokenIntf;
 
 public class StateMachineGanzzahl extends StateMachine {
 
@@ -42,8 +43,8 @@ public class StateMachineGanzzahl extends StateMachine {
 	}
 
    @Override
-    public String getName() {
-        return "Ganzzahl";
-    }
+   public TokenIntf.Type getType() {
+       return TokenIntf.Type.INTEGER;
+   }
 
 }

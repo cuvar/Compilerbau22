@@ -21,16 +21,6 @@ public class Lexer  {
         }
     }
     
-    static class Token {
-        public String m_word;
-        public String m_kind;
-        
-        public Token(String word, String kind) {
-            m_word = word;
-            m_kind = kind;
-        }
-    }
-    
     protected Vector<MachineInfo> m_machineList;
     protected String m_input;
     
@@ -86,7 +76,10 @@ public class Lexer  {
         // set next word [start pos, final pos)
         String nextWord = m_input.substring(0, bestMatch.m_acceptPos);
         m_input = m_input.substring(bestMatch.m_acceptPos);
-        return new Token(nextWord, bestMatch.m_machine.getName());
+        Token token = new Token();
+        token.m_type = bestMatch.m_machine.getType();
+        token.m_value = nextWord;
+        return token;
     }
     
     boolean isWhitespace(char c) {
@@ -107,25 +100,19 @@ public class Lexer  {
 
     public void processInput(String input, OutputStreamWriter outStream) throws Exception {
         m_input = input;
-        // skip white space
-        skipWhiteSpace();
         // while input available
         while (!m_input.isEmpty()) {
             // get next word
             Token curWord = nextWord();
             // break on failure
-            if (curWord.m_word.isEmpty()) {
+            if (curWord.m_type == Token.Type.EOF) {
                 outStream.write("ERROR\n");
                 break;
             }
             // print word
-            outStream.write(curWord.m_kind);
-            outStream.write(" ");
-            outStream.write(curWord.m_word);
+            outStream.write(curWord.toString());
             outStream.write("\n");
             outStream.flush();
-            // skip whitespace
-            skipWhiteSpace();
         }
     }
 }

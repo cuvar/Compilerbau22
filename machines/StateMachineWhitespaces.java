@@ -14,8 +14,8 @@ public class StateMachineWhitespaces extends StateMachine {
 		return (m_state.equals("end"));
 	}
 	
-	public String getName() {
-        return "Whitespaces";
+    public TokenIntf.Type getType() {
+        return TokenIntf.Type.WHITESPACE;
     }
 
 	@Override

@@ -1,6 +1,7 @@
 package machines;
 
 import compiler.StateMachine;
+import compiler.TokenIntf;
 import compiler.State;
 
 public class StateMachineChar extends StateMachine {
@@ -35,9 +36,8 @@ public class StateMachineChar extends StateMachine {
 		return (m_state.equals("end"));	
 	}
 
-    public String getName() {
-        return "Char";
+    public TokenIntf.Type getType() {
+        return TokenIntf.Type.CHAR;
     }
-
 
 }

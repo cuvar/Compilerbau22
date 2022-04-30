@@ -1,6 +1,6 @@
 package machines;
 
-public class StateMachineTableStringLiteral extends compiler.StateMachine {
+public class StateMachineStringLiteral extends compiler.StateMachine {
 	
 	@Override
 	public String getStartState() {
@@ -29,7 +29,7 @@ public class StateMachineTableStringLiteral extends compiler.StateMachine {
 	}
 
 	public String getName() {
-		return "MultilineComment";
+		return "String";
 	}
 
 }

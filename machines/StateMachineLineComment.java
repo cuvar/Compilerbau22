@@ -1,5 +1,7 @@
 package machines;
 
+import compiler.TokenIntf;
+
 /**
  * sample state machine
  * accept Line Comment
@@ -38,8 +40,8 @@ public class StateMachineLineComment extends compiler.StateMachine {
 		m_stateMap.put("end", end);
 	}
 
-	public String getName() {
-	        return "LineComment";
-	    }
+    public TokenIntf.Type getType() {
+        return TokenIntf.Type.LINECOMMENT;
+    }
 
 }

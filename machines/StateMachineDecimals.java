@@ -1,6 +1,7 @@
 package machines;
 
 import compiler.State;
+import compiler.TokenIntf;
 
 /**
  * sample state machine
@@ -60,8 +61,8 @@ public class StateMachineDecimals extends compiler.StateMachine {
         }
     }
 
-    public String getName() {
-	        return "Decimals";
-	    }
+    public TokenIntf.Type getType() {
+        return TokenIntf.Type.DECIMAL;
+    }
 
 }
