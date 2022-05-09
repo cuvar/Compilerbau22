@@ -1,47 +1,49 @@
 package compiler;
 
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
-public class Lexer  {
+public class Lexer {
 
     static class MachineInfo {
 
         public StateMachineBase m_machine;
         public int m_acceptPos;
-    
+
         public MachineInfo(StateMachineBase machine) {
             m_machine = machine;
             m_acceptPos = 0;
         }
-        
+
         public void init(String input) {
             m_acceptPos = 0;
             m_machine.init(input);
         }
     }
-    
+
     protected Vector<MachineInfo> m_machineList;
     protected String m_input;
-    
+
     public Lexer() {
         m_machineList = new Vector<MachineInfo>();
     }
-    
+
     public void addMachine(StateMachineBase machine) {
         m_machineList.add(new MachineInfo(machine));
     }
-    
-    public void init (String input) {
+
+    public void init(String input) {
         m_input = input;
     }
-    
+
     public void initMachines(String input) {
         for (MachineInfo machine : m_machineList) {
             machine.init(input);
         }
     }
-    
+
     public Token nextWord() throws Exception {
         int curPos = 0;
         // initialize machines
@@ -81,7 +83,7 @@ public class Lexer  {
         token.m_value = nextWord;
         return token;
     }
-    
+
     boolean isWhitespace(char c) {
         if (c == ' ' || c == '\t' || c == '\n') {
             return true;
@@ -98,6 +100,8 @@ public class Lexer  {
         m_input = m_input.substring(i);
     }
 
+    private List<Token> tokenListe = new ArrayList<>();
+
     public void processInput(String input, OutputStreamWriter outStream) throws Exception {
         m_input = input;
         // while input available
@@ -110,9 +114,38 @@ public class Lexer  {
                 break;
             }
             // print word
-            outStream.write(curWord.toString());
-            outStream.write("\n");
-            outStream.flush();
+            //outStream.write(curWord.toString());
+            //outStream.write("\n");
+            //outStream.flush();
+            tokenListe.add(curWord);
         }
+    }
+
+    public Token getCurToken() {
+        return tokenListe.get(0);
+    }
+
+    public Token lookAhead() {
+        return tokenListe.get(1);
+    }
+
+    public void advance() {
+        tokenListe.remove(0);
+    }
+
+    public void expect(Token token) throws Exception {
+        if (token.equals(tokenListe.get(0))) {
+            advance();
+        }
+        throw new Exception("Token not expected");
+
+    }
+
+    public boolean accept(Token token) {
+        if (token.equals(tokenListe.get(0))) {
+            advance();
+            return true;
+        }
+        return false;
     }
 }
