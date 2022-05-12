@@ -25,6 +25,9 @@ public class Lexer {
 
     protected Vector<MachineInfo> m_machineList;
     protected String m_input;
+    protected Token m_currentToken;
+    protected String m_currentLine;
+    protected int m_currentLineNumber;
 
     public Lexer() {
         m_machineList = new Vector<MachineInfo>();
@@ -34,8 +37,12 @@ public class Lexer {
         m_machineList.add(new MachineInfo(machine));
     }
 
-    public void init(String input) {
+    public void init(String input) throws Exception {
         m_input = input;
+        m_currentToken = new Token();
+        m_currentLine = new String();
+        m_currentLineNumber = 1;
+        advance();
     }
 
     public void initMachines(String input) {
@@ -75,14 +82,18 @@ public class Lexer {
                 bestMatch = machine;
             }
         }
+        // throw in case of error
         if (bestMatch.m_machine == null) {
-            Token errorToken = new Token();
-            errorToken.m_type = TokenIntf.Type.EOF;
-            errorToken.m_value = new String();
-            return errorToken;
+            throw new CompilerException("Illegal token", m_currentLineNumber, m_currentLine, null);
         }
         // set next word [start pos, final pos)
         String nextWord = m_input.substring(0, bestMatch.m_acceptPos);
+        if (nextWord.indexOf('\n') != -1) {
+            m_currentLineNumber++;
+            m_currentLine = "";
+        } else {
+            m_currentLine += nextWord;
+        }
         m_input = m_input.substring(bestMatch.m_acceptPos);
         Token token = new Token();
         token.m_type = bestMatch.m_machine.getType();
@@ -90,6 +101,23 @@ public class Lexer {
         return token;
     }
 
+    public Token nextToken() throws Exception {
+        if (m_input.isEmpty()) {
+            Token token = new Token();
+            token.m_type = Token.Type.EOF;
+            token.m_value = new String();
+            return token;
+        }
+        Token token = nextWord();
+        while (
+            token.m_type == Token.Type.WHITESPACE ||
+            token.m_type == Token.Type.MULTILINECOMMENT ||
+            token.m_type == Token.Type.LINECOMMENT) {
+            token = nextWord();    
+        }
+        return token;
+    }
+    
     boolean isWhitespace(char c) {
         if (c == ' ' || c == '\t' || c == '\n') {
             return true;
@@ -106,10 +134,10 @@ public class Lexer {
         m_input = m_input.substring(i);
     }
 
-    private List<Token> tokenListe = new ArrayList<>();
-
     public void processInput(String input, OutputStreamWriter outStream) throws Exception {
         m_input = input;
+        m_currentLine = "";
+        m_currentLineNumber = 1;
         // while input available
         while (!m_input.isEmpty()) {
             // get next word
@@ -126,33 +154,28 @@ public class Lexer {
                 outStream.write(curWord.toString());
                 outStream.write("\n");
                 outStream.flush();
-                tokenListe.add(curWord);
             }
         }
     }
 
-    public Token getCurToken() {
-        return tokenListe.get(0);
-    }
-
     public Token lookAhead() {
-        return tokenListe.get(1);
+        return m_currentToken;
     }
 
-    public void advance() {
-        tokenListe.remove(0);
+    public void advance() throws Exception {
+        m_currentToken = nextWord();
     }
 
-    public void expect(Token token) throws Exception {
-        if (token.equals(tokenListe.get(0))) {
+    public void expect(Token.Type tokenType) throws Exception {
+        if (tokenType == m_currentToken.m_type) {
             advance();
         }
         throw new Exception("Token not expected");
 
     }
 
-    public boolean accept(Token token) {
-        if (token.equals(tokenListe.get(0))) {
+    public boolean accept(Token.Type tokenType) throws Exception {
+        if (tokenType == m_currentToken.m_type) {
             advance();
             return true;
         }
