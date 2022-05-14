@@ -59,6 +59,8 @@ public class Lexer {
         addKeywordMachine("/", compiler.TokenIntf.Type.DIV);
         addKeywordMachine("+", compiler.TokenIntf.Type.PLUS);
         addKeywordMachine("-", compiler.TokenIntf.Type.MINUS);
+        addKeywordMachine("&", compiler.TokenIntf.Type.BITAND);
+        addKeywordMachine("|", compiler.TokenIntf.Type.BITOR);
         addKeywordMachine("<<", compiler.TokenIntf.Type.SHIFTLEFT);
         addKeywordMachine(">>", compiler.TokenIntf.Type.SHIFTRIGHT);
         addKeywordMachine("==", compiler.TokenIntf.Type.EQUAL);
@@ -102,6 +104,13 @@ public class Lexer {
     }
 
     public Token nextWord() throws Exception {
+        // check end of file
+        if (m_input.isEmpty()) {
+            Token token = new Token();
+            token.m_type = Token.Type.EOF;
+            token.m_value = new String();
+            return token;
+        }
         int curPos = 0;
         // initialize machines
         initMachines(m_input);
@@ -152,12 +161,6 @@ public class Lexer {
     }
 
     public Token nextToken() throws Exception {
-        if (m_input.isEmpty()) {
-            Token token = new Token();
-            token.m_type = Token.Type.EOF;
-            token.m_value = new String();
-            return token;
-        }
         Token token = nextWord();
         while (
             token.m_type == Token.Type.WHITESPACE ||
@@ -213,15 +216,19 @@ public class Lexer {
     }
 
     public void advance() throws Exception {
-        m_currentToken = nextWord();
+        m_currentToken = nextToken();
     }
 
     public void expect(Token.Type tokenType) throws Exception {
         if (tokenType == m_currentToken.m_type) {
             advance();
+        } else {
+            throw new CompilerException(
+                "Unexpected token " + m_currentToken.toString(),
+                m_currentLineNumber, m_currentLine,
+                Token.type2String(tokenType)
+            );
         }
-        throw new Exception("Token not expected");
-
     }
 
     public boolean accept(Token.Type tokenType) throws Exception {

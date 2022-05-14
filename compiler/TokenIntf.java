@@ -14,6 +14,8 @@ public abstract class TokenIntf {
         DIV,
         PLUS,
         MINUS,
+        BITAND,
+        BITOR,
         SHIFTLEFT,
         SHIFTRIGHT,
         EQUAL,

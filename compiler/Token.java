@@ -37,6 +37,10 @@ public class Token extends TokenIntf {
             return "PLUS";
         } else if (type == Type.MINUS) {
             return "MINUS";
+        } else if (type == Type.BITAND) {
+            return "BITAND";
+        } else if (type == Type.BITOR) {
+            return "BITOR";
         } else if (type == Type.SHIFTLEFT) {
             return "SHIFTLEFT";
         } else if (type == Type.SHIFTRIGHT) {
