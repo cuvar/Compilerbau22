@@ -5,6 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import machines.StateMachineChar;
+import machines.StateMachineDecimals;
+import machines.StateMachineGanzzahl;
+import machines.StateMachineIdentifier;
+import machines.StateMachineKeywords;
+import machines.StateMachineLineComment;
+import machines.StateMachineMultiLineComment;
+import machines.StateMachineStringLiteral;
+import machines.StateMachineWhitespaces;
+
 public class Lexer {
 
     static class MachineInfo {
@@ -31,6 +41,46 @@ public class Lexer {
 
     public Lexer() {
         m_machineList = new Vector<MachineInfo>();
+        addLexerMachines();
+    }
+
+    private void addLexerMachines() {
+        compiler.StateMachineBase identifierMachine = new StateMachineIdentifier();
+        addMachine(identifierMachine);
+        compiler.StateMachineBase ganzzahlMachine = new StateMachineGanzzahl();
+        addMachine(ganzzahlMachine);
+        compiler.StateMachineBase decimalsMachine = new StateMachineDecimals();
+        addMachine(decimalsMachine);
+        compiler.StateMachineBase stringMachine = new StateMachineStringLiteral();
+        addMachine(stringMachine);
+        compiler.StateMachineBase charMachine = new StateMachineChar();
+        addMachine(charMachine);
+        addKeywordMachine("*", compiler.TokenIntf.Type.MUL);
+        addKeywordMachine("/", compiler.TokenIntf.Type.DIV);
+        addKeywordMachine("+", compiler.TokenIntf.Type.PLUS);
+        addKeywordMachine("-", compiler.TokenIntf.Type.MINUS);
+        addKeywordMachine("<<", compiler.TokenIntf.Type.SHIFTLEFT);
+        addKeywordMachine(">>", compiler.TokenIntf.Type.SHIFTRIGHT);
+        addKeywordMachine("==", compiler.TokenIntf.Type.EQUAL);
+        addKeywordMachine("<", compiler.TokenIntf.Type.LESS);
+        addKeywordMachine(">", compiler.TokenIntf.Type.GREATER);
+        addKeywordMachine("!", compiler.TokenIntf.Type.NOT);
+        addKeywordMachine("&&", compiler.TokenIntf.Type.AND);
+        addKeywordMachine("||", compiler.TokenIntf.Type.OR);
+        addKeywordMachine("?", compiler.TokenIntf.Type.QUESTIONMARK);
+        addKeywordMachine(":", compiler.TokenIntf.Type.DOUBLECOLON);
+        compiler.StateMachineBase lineCommentMachine = new StateMachineLineComment();
+        addMachine(lineCommentMachine);
+        compiler.StateMachineBase multiLineCommentMachine = new StateMachineMultiLineComment();
+        addMachine(multiLineCommentMachine);
+        compiler.StateMachineBase whitespaceMachine = new StateMachineWhitespaces();
+        addMachine(whitespaceMachine);        
+        addKeywordMachine("if", compiler.TokenIntf.Type.IF);
+        addKeywordMachine("else", compiler.TokenIntf.Type.ELSE);
+    }
+    
+    public void addKeywordMachine(String keyword, TokenIntf.Type tokenType) {
+        m_machineList.add(new MachineInfo(new StateMachineKeywords(keyword, tokenType)));
     }
 
     public void addMachine(StateMachineBase machine) {
