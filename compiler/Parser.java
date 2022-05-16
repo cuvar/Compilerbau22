@@ -60,6 +60,12 @@ public class Parser {
     }
 
     ASTExprNode getQuestionMarkExpr() throws Exception {
-        return getAndOrExpr();
+
+        ASTExprNode toResolve = getAndOrExpr();
+        m_lexer.expect(Token.Type.QUESTIONMARK);
+        ASTExprNode trueNum = getAndOrExpr();
+        m_lexer.expect(Token.Type.DOUBLECOLON);
+        ASTExprNode falseNum = getAndOrExpr();
+        return new ASTQuestionmarkExprNode(toResolve, trueNum, falseNum);
     }
 }
