@@ -154,6 +154,6 @@ public class ExpressionEvaluator {
         m_lexer.expect(Token.Type.DOUBLECOLON);
         int falseNum = getAndOrExpr();
 
-        return toResolve == 1 ? trueNum : falseNum;
+        return toResolve != 0 ? trueNum : falseNum;
     }
 }
