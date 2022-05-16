@@ -45,8 +45,23 @@ public class ExpressionEvaluator {
         return result;
     }
 
+    // bitAndOrExpr : plusMinusExpr (( BITAND | BITOR ) plusMinusExpr)*
     int getBitAndOrExpr() throws Exception {
-        return getPlusMinusExpr();
+        int result = getPlusMinusExpr();
+        while(
+            m_lexer.lookAhead().m_type == Token.Type.BITAND ||
+            m_lexer.lookAhead().m_type == Token.Type.BITOR)
+        {
+            Token nextToken = m_lexer.lookAhead();
+            if (nextToken.m_type == Token.Type.BITAND) {
+                m_lexer.expect(Token.Type.BITAND);
+                result = result & getPlusMinusExpr();
+            } else {
+                m_lexer.expect(Token.Type.BITOR);
+                result = result | getPlusMinusExpr();
+            }
+        }
+        return result;
     }
 
     int getShiftExpr() throws Exception {
