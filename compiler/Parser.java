@@ -1,32 +1,43 @@
 package compiler;
+
 import compiler.ast.*;
 
 public class Parser {
     private Lexer m_lexer;
-    
+
     public Parser(Lexer lexer) {
         m_lexer = lexer;
     }
-    
+
     public ASTExprNode parseExpression(String val) throws Exception {
         m_lexer.init(val);
         return getQuestionMarkExpr();
     }
-    
+
     ASTExprNode getParantheseExpr() throws Exception {
         Token curToken = m_lexer.lookAhead();
-        m_lexer.expect(Token.Type.INTEGER);
-        return new ASTIntegerLiteralNode(curToken.m_value);
+        ASTExprNode result = null;
+
+        if (curToken.m_type == Token.Type.LPAREN) {
+            m_lexer.expect(Token.Type.LPAREN);
+            result = new ASTParentheseNode(getQuestionMarkExpr());
+            m_lexer.expect(Token.Type.RPAREN);
+        } else if (curToken.m_type == Token.Type.INTEGER) {
+            result = new ASTIntegerLiteralNode(curToken.m_value);
+            m_lexer.advance();
+        }
+        return result;
+
     }
-    
+
     ASTExprNode getUnaryExpr() throws Exception {
         return getParantheseExpr();
     }
-    
+
     ASTExprNode getMulDivExpr() throws Exception {
         return getUnaryExpr();
     }
-    
+
     ASTExprNode getPlusMinusExpr() throws Exception {
         ASTExprNode result = getMulDivExpr();
         Token nextToken = m_lexer.lookAhead();
