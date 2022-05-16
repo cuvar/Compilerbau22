@@ -14,8 +14,18 @@ public class ExpressionEvaluator {
 
     int getParantheseExpr() throws Exception {
         Token curToken = m_lexer.lookAhead();
-        m_lexer.expect(Token.Type.INTEGER);
-        return Integer.valueOf(curToken.m_value);
+        int result = 0;
+
+        if (curToken.m_type == Token.Type.LPAREN) {
+            m_lexer.expect(Token.Type.LPAREN);
+            result = getQuestionMarkExpr();
+            m_lexer.expect(Token.Type.RPAREN);
+
+        } else if (curToken.m_type == Token.Type.INTEGER) {
+            result = Integer.valueOf(curToken.m_value);
+        }
+
+        return result;
     }
 
     int getUnaryExpr() throws Exception {
@@ -46,10 +56,8 @@ public class ExpressionEvaluator {
     // bitAndOrExpr : plusMinusExpr (( BITAND | BITOR ) plusMinusExpr)*
     int getBitAndOrExpr() throws Exception {
         int result = getPlusMinusExpr();
-        while(
-            m_lexer.lookAhead().m_type == Token.Type.BITAND ||
-            m_lexer.lookAhead().m_type == Token.Type.BITOR)
-        {
+        while (m_lexer.lookAhead().m_type == Token.Type.BITAND ||
+                m_lexer.lookAhead().m_type == Token.Type.BITOR) {
             Token nextToken = m_lexer.lookAhead();
             if (nextToken.m_type == Token.Type.BITAND) {
                 m_lexer.expect(Token.Type.BITAND);
