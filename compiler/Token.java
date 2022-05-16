@@ -9,9 +9,6 @@ public class Token extends TokenIntf {
 		String s = type2String(m_type);
     	s += ' ';
 		s += m_value;
-
-
-
 		return s;
 	}
 
