@@ -65,8 +65,6 @@ public class Parser {
 
 	ASTExprNode getQuestionMarkExpr() throws Exception {
 
-		// ASTExprNode result = getAndOrExpr(); do i need getAndOrExpr?s#
-
 		ASTExprNode toResolve = getAndOrExpr();
 		m_lexer.expect(Token.Type.QUESTIONMARK);
 		ASTExprNode trueNum = getAndOrExpr();
