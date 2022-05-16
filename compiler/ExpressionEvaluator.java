@@ -2,26 +2,26 @@ package compiler;
 
 public class ExpressionEvaluator {
     private Lexer m_lexer;
-    
+
     public ExpressionEvaluator(Lexer lexer) {
         m_lexer = lexer;
     }
-    
+
     public int eval(String val) throws Exception {
         m_lexer.init(val);
         return getQuestionMarkExpr();
     }
-    
+
     int getParantheseExpr() throws Exception {
         Token curToken = m_lexer.lookAhead();
         m_lexer.expect(Token.Type.INTEGER);
         return Integer.valueOf(curToken.m_value);
     }
-    
+
     int getUnaryExpr() throws Exception {
         return getParantheseExpr();
     }
-    
+
     int getMulDivExpr() throws Exception {
         return getUnaryExpr();
     }
@@ -29,10 +29,8 @@ public class ExpressionEvaluator {
     // plusMinusExpr : mulDivExpr ((PLUS|MINUS) mulDivExpr)*
     int getPlusMinusExpr() throws Exception {
         int result = getMulDivExpr();
-        while(
-            m_lexer.lookAhead().m_type == Token.Type.PLUS ||
-            m_lexer.lookAhead().m_type == Token.Type.MINUS)
-        {
+        while (m_lexer.lookAhead().m_type == Token.Type.PLUS ||
+                m_lexer.lookAhead().m_type == Token.Type.MINUS) {
             Token nextToken = m_lexer.lookAhead();
             if (nextToken.m_type == Token.Type.PLUS) {
                 m_lexer.expect(Token.Type.PLUS);
@@ -69,7 +67,29 @@ public class ExpressionEvaluator {
     }
 
     int getCompareExpr() throws Exception {
-        return getShiftExpr();
+        int result = getShiftExpr();
+        while (m_lexer.lookAhead().m_type == Token.Type.EQUAL ||
+                m_lexer.lookAhead().m_type == Token.Type.GREATER ||
+                m_lexer.lookAhead().m_type == Token.Type.LESS) {
+            Token nextToken = m_lexer.lookAhead();
+            switch (nextToken.m_type) {
+                case EQUAL:
+                    m_lexer.expect(Token.Type.EQUAL);
+                    result = (result == getShiftExpr()) ? 1 : 0;
+                    break;
+                case GREATER:
+                    m_lexer.expect(Token.Type.GREATER);
+                    result = (result > getShiftExpr()) ? 1 : 0;
+                    break;
+                case LESS:
+                    m_lexer.expect(Token.Type.LESS);
+                    result = (result < getShiftExpr()) ? 1 : 0;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return result;
     }
 
     int getAndOrExpr() throws Exception {
