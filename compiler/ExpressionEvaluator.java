@@ -23,6 +23,7 @@ public class ExpressionEvaluator {
 
         } else if (curToken.m_type == Token.Type.INTEGER) {
             result = Integer.valueOf(curToken.m_value);
+            m_lexer.advance();
         }
 
         return result;
@@ -33,7 +34,17 @@ public class ExpressionEvaluator {
     }
 
     int getMulDivExpr() throws Exception {
-        return getUnaryExpr();
+        int result = getUnaryExpr();
+        while (m_lexer.lookAhead().m_type == Token.Type.MUL || m_lexer.lookAhead().m_type == Token.Type.DIV) {
+            if (m_lexer.lookAhead().m_type == Token.Type.MUL) {
+                m_lexer.expect(Token.Type.MUL);
+                result *= getUnaryExpr();
+            } else {
+                m_lexer.expect(Token.Type.DIV);
+                result /= getUnaryExpr();
+            }
+        }
+        return result;
     }
 
     // plusMinusExpr : mulDivExpr ((PLUS|MINUS) mulDivExpr)*
