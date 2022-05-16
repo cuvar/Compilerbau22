@@ -21,7 +21,7 @@ public class ExpressionEvaluator {
     int getUnaryExpr() throws Exception {
         return getParantheseExpr();
     }
-    
+
     int getMulDivExpr() throws Exception {
         return getUnaryExpr();
     }
@@ -58,7 +58,22 @@ public class ExpressionEvaluator {
     }
 
     int getAndOrExpr() throws Exception {
-        return getCompareExpr();
+        int result = getCompareExpr();
+
+        while (
+                m_lexer.lookAhead().m_type == Token.Type.AND ||
+                        m_lexer.lookAhead().m_type == Token.Type.OR) {
+            Token nextToken = m_lexer.lookAhead();
+            if (nextToken.m_type == Token.Type.AND) {
+                m_lexer.expect(Token.Type.AND);
+                result &= getCompareExpr();
+            } else {
+                m_lexer.expect(Token.Type.OR);
+                result |= getCompareExpr();
+            }
+
+        }
+        return result;
     }
 
     int getQuestionMarkExpr() throws Exception {
