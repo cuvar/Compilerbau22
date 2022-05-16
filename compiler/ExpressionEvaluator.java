@@ -20,7 +20,6 @@ public class ExpressionEvaluator {
             m_lexer.expect(Token.Type.LPAREN);
             result = getQuestionMarkExpr();
             m_lexer.expect(Token.Type.RPAREN);
-
         } else if (curToken.m_type == Token.Type.INTEGER) {
             result = Integer.valueOf(curToken.m_value);
             m_lexer.advance();
