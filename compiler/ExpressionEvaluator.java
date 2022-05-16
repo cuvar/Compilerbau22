@@ -120,6 +120,12 @@ public class ExpressionEvaluator {
     }
 
     int getQuestionMarkExpr() throws Exception {
-        return getAndOrExpr();
+        int toResolve = getAndOrExpr();
+        m_lexer.expect(Token.Type.QUESTIONMARK);
+        int trueNum = getAndOrExpr();
+        m_lexer.expect(Token.Type.DOUBLECOLON);
+        int falseNum = getAndOrExpr();
+
+        return toResolve == 1 ? trueNum : falseNum;
     }
 }
