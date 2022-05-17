@@ -70,10 +70,13 @@ public class Parser {
     ASTExprNode getQuestionMarkExpr() throws Exception {
 
         ASTExprNode toResolve = getAndOrExpr();
-        m_lexer.expect(Token.Type.QUESTIONMARK);
-        ASTExprNode trueNum = getAndOrExpr();
-        m_lexer.expect(Token.Type.DOUBLECOLON);
-        ASTExprNode falseNum = getAndOrExpr();
-        return new ASTQuestionmarkExprNode(toResolve, trueNum, falseNum);
+        while (m_lexer.lookAhead().m_type == Token.Type.QUESTIONMARK) {
+          m_lexer.expect(Token.Type.QUESTIONMARK);
+          ASTExprNode trueNum = getAndOrExpr();
+          m_lexer.expect(Token.Type.DOUBLECOLON);
+          ASTExprNode falseNum = getAndOrExpr();
+          toResolve = new ASTQuestionmarkExprNode(toResolve, trueNum, falseNum);
+        }
+        return toResolve;
     }
 }
