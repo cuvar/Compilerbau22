@@ -19,8 +19,16 @@ public class Parser {
         return new ASTIntegerLiteralNode(curToken.m_value);
     }
     
+    // unaryexpr: (NOT | MINUS) ? paranthesisexpr
     ASTExprNode getUnaryExpr() throws Exception {
-        return getParantheseExpr();
+        var token = m_lexer.lookAhead().m_type;
+
+        if (token == TokenIntf.Type.MINUS || token == TokenIntf.Type.NOT) {
+            m_lexer.advance();
+        }
+
+        var parenExpr = getParantheseExpr();
+        return new ASTUnaryExprNode(parenExpr, token);
     }
     
     ASTExprNode getMulDivExpr() throws Exception {
