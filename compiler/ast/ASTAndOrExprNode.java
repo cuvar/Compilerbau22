@@ -4,7 +4,7 @@ import compiler.Token;
 
 import java.io.OutputStreamWriter;
 
-public class ASTAndOrExprNode extends ASTExprNode{
+public class ASTAndOrExprNode extends ASTExprNode {
 
     public ASTExprNode m_lhs;
     public ASTExprNode m_rhs;
@@ -16,6 +16,7 @@ public class ASTAndOrExprNode extends ASTExprNode{
         m_rhs = rhs;
         m_type = type;
     }
+
     @Override
     public void print(OutputStreamWriter outStream, String indent) throws Exception {
         outStream.write(indent);
@@ -32,9 +33,13 @@ public class ASTAndOrExprNode extends ASTExprNode{
     @Override
     public int eval() {
         if (m_type == Token.Type.AND) {
-            return m_lhs.eval() & m_rhs.eval();
+            if (m_lhs.eval() == 1 && m_rhs.eval() == 1) {
+                return 1;
+            } else return 0;
         } else {
-            return m_lhs.eval() | m_rhs.eval();
+            if (m_lhs.eval() == 1 || m_rhs.eval() == 1) {
+                return 1;
+            } else return 0;
         }
     }
 }

@@ -1,5 +1,4 @@
 package compiler;
-
 import compiler.ast.*;
 
 public class Parser {
@@ -65,18 +64,17 @@ public class Parser {
     }
 
     ASTExprNode getAndOrExpr() throws Exception {
-
         ASTExprNode result = getCompareExpr();
-        while (m_lexer.lookAhead().m_type == Token.Type.AND ||
-                m_lexer.lookAhead().m_type == Token.Type.OR) {
-            Token nextToken = m_lexer.lookAhead();
+        Token nextToken = m_lexer.lookAhead();
+        while (nextToken.m_type == Token.Type.AND || nextToken.m_type == Token.Type.OR) {
             if (nextToken.m_type == Token.Type.AND) {
-                m_lexer.expect(Token.Type.AND);
+                m_lexer.advance();
                 result = new ASTAndOrExprNode(result, getCompareExpr(), Token.Type.AND);
             } else {
-                m_lexer.expect(Token.Type.OR);
+                m_lexer.advance();
                 result = new ASTAndOrExprNode(result, getCompareExpr(), Token.Type.OR);
             }
+            nextToken = m_lexer.lookAhead();
         }
         return result;
     }
