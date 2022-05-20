@@ -3,22 +3,22 @@ import compiler.ast.*;
 
 public class Parser {
     private Lexer m_lexer;
-
+    
     public Parser(Lexer lexer) {
         m_lexer = lexer;
     }
-
+    
     public ASTExprNode parseExpression(String val) throws Exception {
         m_lexer.init(val);
         return getQuestionMarkExpr();
     }
-
+    
     ASTExprNode getParantheseExpr() throws Exception {
         Token curToken = m_lexer.lookAhead();
         m_lexer.expect(Token.Type.INTEGER);
         return new ASTIntegerLiteralNode(curToken.m_value);
     }
-
+    
     // unaryexpr: (NOT | MINUS) ? paranthesisexpr
     ASTExprNode getUnaryExpr() throws Exception {
         var token = m_lexer.lookAhead().m_type;
@@ -30,11 +30,11 @@ public class Parser {
         var parenExpr = getParantheseExpr();
         return new ASTUnaryExprNode(parenExpr, token);
     }
-
+    
     ASTExprNode getMulDivExpr() throws Exception {
         return getUnaryExpr();
     }
-
+    
     ASTExprNode getPlusMinusExpr() throws Exception {
         ASTExprNode result = getMulDivExpr();
         Token nextToken = m_lexer.lookAhead();
@@ -83,11 +83,11 @@ public class Parser {
 
         ASTExprNode toResolve = getAndOrExpr();
         while (m_lexer.lookAhead().m_type == Token.Type.QUESTIONMARK) {
-            m_lexer.expect(Token.Type.QUESTIONMARK);
-            ASTExprNode trueNum = getAndOrExpr();
-            m_lexer.expect(Token.Type.DOUBLECOLON);
-            ASTExprNode falseNum = getAndOrExpr();
-            toResolve = new ASTQuestionmarkExprNode(toResolve, trueNum, falseNum);
+          m_lexer.expect(Token.Type.QUESTIONMARK);
+          ASTExprNode trueNum = getAndOrExpr();
+          m_lexer.expect(Token.Type.DOUBLECOLON);
+          ASTExprNode falseNum = getAndOrExpr();
+          toResolve = new ASTQuestionmarkExprNode(toResolve, trueNum, falseNum);
         }
         return toResolve;
     }
