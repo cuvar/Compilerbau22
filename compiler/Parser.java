@@ -64,7 +64,19 @@ public class Parser {
     }
 
     ASTExprNode getAndOrExpr() throws Exception {
-        return getCompareExpr();
+        ASTExprNode result = getCompareExpr();
+        Token nextToken = m_lexer.lookAhead();
+        while (nextToken.m_type == Token.Type.AND || nextToken.m_type == Token.Type.OR) {
+            if (nextToken.m_type == Token.Type.AND) {
+                m_lexer.advance();
+                result = new ASTAndOrExprNode(result, getCompareExpr(), Token.Type.AND);
+            } else {
+                m_lexer.advance();
+                result = new ASTAndOrExprNode(result, getCompareExpr(), Token.Type.OR);
+            }
+            nextToken = m_lexer.lookAhead();
+        }
+        return result;
     }
 
     ASTExprNode getQuestionMarkExpr() throws Exception {
