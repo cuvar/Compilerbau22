@@ -39,13 +39,8 @@ public class Parser {
         ASTExprNode result = getMulDivExpr();
         Token nextToken = m_lexer.lookAhead();
         while (nextToken.m_type == Token.Type.PLUS || nextToken.m_type == Token.Type.MINUS) {
-            if (nextToken.m_type == Token.Type.PLUS) {
-                m_lexer.advance();
-                result = new ASTPlusMinusExprNode(result, getMulDivExpr(), Token.Type.PLUS);
-            } else {
-                m_lexer.advance();
-                result = new ASTPlusMinusExprNode(result, getMulDivExpr(), Token.Type.MINUS);
-            }
+            m_lexer.advance();
+            result = new ASTPlusMinusExprNode(result, getMulDivExpr(), nextToken.m_type);
             nextToken = m_lexer.lookAhead();
         }
         return result;
