@@ -10,6 +10,10 @@ public class Parser {
     
     public ASTExprNode parseExpression(String val) throws Exception {
         m_lexer.init(val);
+        return getExpr();
+    }
+    
+    ASTExprNode getExpr() throws Exception {
         return getQuestionMarkExpr();
     }
     
@@ -81,4 +85,34 @@ public class Parser {
         }
         return toResolve;
     }
+  
+    // blockstmt: LBRACE stmtlist RBRACE
+    // stmtlist: stmt stmtlist
+    // stmtlist: epsilon
+    ASTStmtNode getBlockStmt() throws Exception {
+        return null;
+    }
+    
+    // stmt: declareStmt
+    // stmt: assignStmt
+    // stmt: printStmt
+    ASTStmtNode getStmt() throws Exception {
+        return null;
+    }
+
+    // declareStmt: DECLARE IDENTIFIER SEMICOLON
+    ASTStmtNode getDeclareStmt() throws Exception {
+        return null;
+    }
+
+    // assignStmt: IDENTIFER ASSIGN expr SEMICOLON
+    ASTStmtNode getAssignStmt() throws Exception {
+        return null;
+    }
+
+    // printStmt: PRINT expr SEMICOLON
+    ASTStmtNode getPrintStmt() throws Exception {
+        return null;
+    }
+
 }

@@ -79,6 +79,10 @@ public class Lexer {
         addMachine(multiLineCommentMachine);
         compiler.StateMachineBase whitespaceMachine = new StateMachineWhitespaces();
         addMachine(whitespaceMachine);
+        addKeywordMachine(";", compiler.TokenIntf.Type.SEMICOLON);
+        addKeywordMachine("=", compiler.TokenIntf.Type.ASSIGN);
+        addKeywordMachine("DECLARE", compiler.TokenIntf.Type.DECLARE);
+        addKeywordMachine("PRINT", compiler.TokenIntf.Type.PRINT);
         addKeywordMachine("if", compiler.TokenIntf.Type.IF);
         addKeywordMachine("else", compiler.TokenIntf.Type.ELSE);
     }
