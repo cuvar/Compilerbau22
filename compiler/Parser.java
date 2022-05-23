@@ -19,6 +19,11 @@ public class Parser {
         return getExpr();
     }
     
+    public ASTStmtNode parseStmt(String val) throws Exception {
+        m_lexer.init(val);
+        return getBlockStmt();
+    }
+    
     ASTExprNode getExpr() throws Exception {
         return getQuestionMarkExpr();
     }
@@ -122,7 +127,7 @@ public class Parser {
     ASTStmtNode getBlockStmt() throws Exception {
         ASTBlockStmtNode result = new ASTBlockStmtNode();
         m_lexer.expect(Token.Type.LBRACE);
-        while (!m_lexer.lookAhead().equals(Token.Type.RBRACE)) {
+        while (m_lexer.lookAhead().m_type != Token.Type.RBRACE) {
             result.addStatement(getStmt());
         }
         m_lexer.expect(Token.Type.RBRACE);
