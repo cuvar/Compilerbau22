@@ -44,7 +44,19 @@ public class Parser {
     }
 
     ASTExprNode getBitAndOrExpr() throws Exception {
-        return getPlusMinusExpr();
+        ASTExprNode result = getPlusMinusExpr();
+        Token nextToken = m_lexer.lookAhead();
+        while (nextToken.m_type == Token.Type.BITAND || nextToken.m_type == Token.Type.BITOR) {
+            if (nextToken.m_type == Token.Type.BITAND) {
+                m_lexer.advance();
+                result = new ASTBitAndOrExprNode(result, getPlusMinusExpr(), Token.Type.BITAND);
+            } else {
+                m_lexer.advance();
+                result = new ASTBitAndOrExprNode(result, getPlusMinusExpr(), Token.Type.BITOR);
+            }
+            nextToken = m_lexer.lookAhead();
+        }
+        return result;
     }
 
     ASTExprNode getShiftExpr() throws Exception {
