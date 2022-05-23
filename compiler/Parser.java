@@ -96,8 +96,19 @@ public class Parser {
     // stmt: declareStmt
     // stmt: assignStmt
     // stmt: printStmt
+    // stmt: declareStmt
+    // stmt: assignStmt
+    // stmt: printStmt
     ASTStmtNode getStmt() throws Exception {
-        return null;
+        Token token = m_lexer.lookAhead();
+        if (token.m_type == Token.Type.DECLARE) {
+            return getDeclareStmt();
+        } else if (token.m_type == Token.Type.IDENT) {
+            return getAssignStmt();
+        } else if (token.m_type == Token.Type.PRINT) {
+            return getPrintStmt();
+        }
+        throw new Exception("Unexpected Statement");
     }
 
     // declareStmt: DECLARE IDENTIFIER SEMICOLON
