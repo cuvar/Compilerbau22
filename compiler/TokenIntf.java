@@ -10,6 +10,8 @@ public abstract class TokenIntf {
 		CHAR,
         LPAREN,
         RPAREN,
+		LBRACE,
+		RBRACE,
         MUL,
         DIV,
         PLUS,

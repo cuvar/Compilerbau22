@@ -115,7 +115,14 @@ public class Parser {
     // stmtlist: stmt stmtlist
     // stmtlist: epsilon
     ASTStmtNode getBlockStmt() throws Exception {
-        return null;
+        ASTBlockStmtNode result = new ASTBlockStmtNode();
+        m_lexer.expect(Token.Type.LBRACE);
+        while (!m_lexer.lookAhead().equals(Token.Type.RBRACE)) {
+            result.addStatement(getStmt());
+        }
+        m_lexer.expect(Token.Type.RBRACE);
+
+        return result;
     }
     
     // stmt: declareStmt
