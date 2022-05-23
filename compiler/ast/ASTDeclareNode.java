@@ -21,12 +21,6 @@ public class ASTDeclareNode extends ASTStmtNode {
 
     @Override
     public void execute() {
-        if(symbolTable.getSymbol(identifier) != null) {
-            System.err.printf("Das Symbol \"%s\" ist bereits vergeben!\n", identifier);
-            return;
-        }
-
-        symbolTable.createSymbol(identifier);
     }
 
 }

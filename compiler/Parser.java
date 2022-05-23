@@ -162,6 +162,12 @@ public class Parser {
 
         m_lexer.expect(TokenIntf.Type.SEMICOLON);
 
+        if(m_symbolTable.getSymbol(identifier.m_value) != null) {
+            throw new Exception("Das Symbol \"" + identifier.m_value + "\" ist bereits vergeben!\n");
+        }
+
+        m_symbolTable.createSymbol(identifier.m_value);
+        
         return new ASTDeclareNode(m_symbolTable, identifier.m_value);
     }
 
