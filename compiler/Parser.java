@@ -128,8 +128,8 @@ public class Parser {
     ASTStmtNode getDeclareStmt() throws Exception {
         m_lexer.expect(TokenIntf.Type.DECLARE);
 
-        m_lexer.expect(TokenIntf.Type.IDENT);
         Token identifier = m_lexer.lookAhead();
+        m_lexer.expect(TokenIntf.Type.IDENT);
 
         m_lexer.expect(TokenIntf.Type.SEMICOLON);
 
