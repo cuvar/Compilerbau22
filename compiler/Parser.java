@@ -123,7 +123,10 @@ public class Parser {
 
     // printStmt: PRINT expr SEMICOLON
     ASTStmtNode getPrintStmt() throws Exception {
-        return null;
+        m_lexer.expect(TokenIntf.Type.PRINT);
+        var node = getExpr();
+        m_lexer.expect(TokenIntf.Type.SEMICOLON);
+        return new ASTPrintStmtNode(node);
     }
 
 }
