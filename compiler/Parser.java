@@ -25,8 +25,13 @@ public class Parser {
     
     ASTExprNode getParantheseExpr() throws Exception {
         Token curToken = m_lexer.lookAhead();
-        m_lexer.expect(Token.Type.INTEGER);
-        return new ASTIntegerLiteralNode(curToken.m_value);
+        if(curToken.m_type == Token.Type.INTEGER){
+            m_lexer.advance();
+            return new ASTIntegerLiteralNode(curToken.m_value);
+        }
+        else {
+            return getVariableExpr();
+        }
     }
     
     // unaryexpr: (NOT | MINUS) ? paranthesisexpr
@@ -160,5 +165,18 @@ public class Parser {
         m_lexer.expect(TokenIntf.Type.SEMICOLON);
         return new ASTPrintStmtNode(node);
     }
+
+    // variableExpr: IDENTIFIER
+    ASTExprNode getVariableExpr() throws Exception {
+        Token token = m_lexer.lookAhead();
+        if (token.m_type == Token.Type.IDENT){
+            m_lexer.advance();
+            return new ASTVariableExprNode(token.m_value, getSymbolTable());
+        }
+        throw new Exception("Unexpected Statement");
+
+    }
+
+
 
 }
