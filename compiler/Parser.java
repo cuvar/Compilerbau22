@@ -126,7 +126,14 @@ public class Parser {
 
     // declareStmt: DECLARE IDENTIFIER SEMICOLON
     ASTStmtNode getDeclareStmt() throws Exception {
-        return null;
+        m_lexer.expect(TokenIntf.Type.DECLARE);
+
+        m_lexer.expect(TokenIntf.Type.IDENT);
+        Token identifier = m_lexer.lookAhead();
+
+        m_lexer.expect(TokenIntf.Type.SEMICOLON);
+
+        return new ASTDeclareNode(m_symbolTable, identifier.m_value);
     }
 
     // assignStmt: IDENTIFER ASSIGN expr SEMICOLON
