@@ -3,9 +3,15 @@ import compiler.ast.*;
 
 public class Parser {
     private Lexer m_lexer;
+    private SymbolTable m_symbolTable;
     
     public Parser(Lexer lexer) {
         m_lexer = lexer;
+        m_symbolTable = new SymbolTable();
+    }
+    
+    public SymbolTable getSymbolTable() {
+        return m_symbolTable;
     }
     
     public ASTExprNode parseExpression(String val) throws Exception {
