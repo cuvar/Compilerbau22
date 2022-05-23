@@ -14,16 +14,54 @@ public class ExpressionEvaluator {
 
     int getParantheseExpr() throws Exception {
         Token curToken = m_lexer.lookAhead();
-        m_lexer.expect(Token.Type.INTEGER);
-        return Integer.valueOf(curToken.m_value);
-    }
+        int result = 0;
 
+        if (curToken.m_type == Token.Type.LPAREN) {
+            m_lexer.expect(Token.Type.LPAREN);
+            result = getQuestionMarkExpr();
+            m_lexer.expect(Token.Type.RPAREN);
+        } else if (curToken.m_type == Token.Type.INTEGER) {
+            result = Integer.valueOf(curToken.m_value);
+            m_lexer.advance();
+        }
+
+        return result;
+    }
+    
+    // unaryexpr: (NOT | MINUS) ? paranthesisexpr
     int getUnaryExpr() throws Exception {
-        return getParantheseExpr();
+        var token = m_lexer.lookAhead().m_type;
+        int result;
+
+        switch (token) {
+            case MINUS:
+                m_lexer.expect(Token.Type.MINUS);
+                result = -getParantheseExpr();
+                break;
+            case NOT:
+                m_lexer.expect(Token.Type.NOT);
+                result = (getParantheseExpr() == 0) ? 1 : 0;
+                break;
+            default:
+                result = getParantheseExpr();
+                break;
+        }
+
+        return result;
     }
 
     int getMulDivExpr() throws Exception {
-        return getUnaryExpr();
+        int result = getUnaryExpr();
+        while (m_lexer.lookAhead().m_type == Token.Type.MUL || m_lexer.lookAhead().m_type == Token.Type.DIV) {
+            if (m_lexer.lookAhead().m_type == Token.Type.MUL) {
+                m_lexer.expect(Token.Type.MUL);
+                result *= getUnaryExpr();
+            } else {
+                m_lexer.expect(Token.Type.DIV);
+                result /= getUnaryExpr();
+            }
+        }
+        return result;
     }
 
     // plusMinusExpr : mulDivExpr ((PLUS|MINUS) mulDivExpr)*
@@ -46,10 +84,8 @@ public class ExpressionEvaluator {
     // bitAndOrExpr : plusMinusExpr (( BITAND | BITOR ) plusMinusExpr)*
     int getBitAndOrExpr() throws Exception {
         int result = getPlusMinusExpr();
-        while(
-            m_lexer.lookAhead().m_type == Token.Type.BITAND ||
-            m_lexer.lookAhead().m_type == Token.Type.BITOR)
-        {
+        while (m_lexer.lookAhead().m_type == Token.Type.BITAND ||
+                m_lexer.lookAhead().m_type == Token.Type.BITOR) {
             Token nextToken = m_lexer.lookAhead();
             if (nextToken.m_type == Token.Type.BITAND) {
                 m_lexer.expect(Token.Type.BITAND);
@@ -93,10 +129,31 @@ public class ExpressionEvaluator {
     }
 
     int getAndOrExpr() throws Exception {
-        return getCompareExpr();
+        int result = getCompareExpr();
+
+        while (
+                m_lexer.lookAhead().m_type == Token.Type.AND ||
+                        m_lexer.lookAhead().m_type == Token.Type.OR) {
+            Token nextToken = m_lexer.lookAhead();
+            if (nextToken.m_type == Token.Type.AND) {
+                m_lexer.expect(Token.Type.AND);
+                result &= getCompareExpr();
+            } else {
+                m_lexer.expect(Token.Type.OR);
+                result |= getCompareExpr();
+            }
+
+        }
+        return result;
     }
 
     int getQuestionMarkExpr() throws Exception {
-        return getAndOrExpr();
+        int toResolve = getAndOrExpr();
+        m_lexer.expect(Token.Type.QUESTIONMARK);
+        int trueNum = getAndOrExpr();
+        m_lexer.expect(Token.Type.DOUBLECOLON);
+        int falseNum = getAndOrExpr();
+
+        return toResolve != 0 ? trueNum : falseNum;
     }
 }

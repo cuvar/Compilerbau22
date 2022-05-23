@@ -71,16 +71,22 @@ public class Lexer {
         addKeywordMachine("||", compiler.TokenIntf.Type.OR);
         addKeywordMachine("?", compiler.TokenIntf.Type.QUESTIONMARK);
         addKeywordMachine(":", compiler.TokenIntf.Type.DOUBLECOLON);
+        addKeywordMachine("(", compiler.TokenIntf.Type.LPAREN);
+        addKeywordMachine(")", compiler.TokenIntf.Type.RPAREN);
         compiler.StateMachineBase lineCommentMachine = new StateMachineLineComment();
         addMachine(lineCommentMachine);
         compiler.StateMachineBase multiLineCommentMachine = new StateMachineMultiLineComment();
         addMachine(multiLineCommentMachine);
         compiler.StateMachineBase whitespaceMachine = new StateMachineWhitespaces();
-        addMachine(whitespaceMachine);        
+        addMachine(whitespaceMachine);
+        addKeywordMachine(";", compiler.TokenIntf.Type.SEMICOLON);
+        addKeywordMachine("=", compiler.TokenIntf.Type.ASSIGN);
+        addKeywordMachine("DECLARE", compiler.TokenIntf.Type.DECLARE);
+        addKeywordMachine("PRINT", compiler.TokenIntf.Type.PRINT);
         addKeywordMachine("if", compiler.TokenIntf.Type.IF);
         addKeywordMachine("else", compiler.TokenIntf.Type.ELSE);
     }
-    
+
     public void addKeywordMachine(String keyword, TokenIntf.Type tokenType) {
         m_machineList.add(new MachineInfo(new StateMachineKeywords(keyword, tokenType)));
     }
@@ -162,15 +168,14 @@ public class Lexer {
 
     public Token nextToken() throws Exception {
         Token token = nextWord();
-        while (
-            token.m_type == Token.Type.WHITESPACE ||
-            token.m_type == Token.Type.MULTILINECOMMENT ||
-            token.m_type == Token.Type.LINECOMMENT) {
-            token = nextWord();    
+        while (token.m_type == Token.Type.WHITESPACE ||
+                token.m_type == Token.Type.MULTILINECOMMENT ||
+                token.m_type == Token.Type.LINECOMMENT) {
+            token = nextWord();
         }
         return token;
     }
-    
+
     boolean isWhitespace(char c) {
         if (c == ' ' || c == '\t' || c == '\n') {
             return true;
@@ -224,10 +229,9 @@ public class Lexer {
             advance();
         } else {
             throw new CompilerException(
-                "Unexpected token " + m_currentToken.toString(),
-                m_currentLineNumber, m_currentLine,
-                Token.type2String(tokenType)
-            );
+                    "Unexpected token " + m_currentToken.toString(),
+                    m_currentLineNumber, m_currentLine,
+                    Token.type2String(tokenType));
         }
     }
 

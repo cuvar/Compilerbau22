@@ -29,6 +29,8 @@ public abstract class TokenIntf {
 		LINECOMMENT,
 		MULTILINECOMMENT,
 		WHITESPACE,
+		SEMICOLON,
+		DECLARE,
 		ASSIGN,
 		PRINT,
 		IF,
