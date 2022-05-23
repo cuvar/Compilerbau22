@@ -1,0 +1,44 @@
+Index: compiler/Parser.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package compiler;\nimport compiler.ast.*;\n\npublic class Parser {\n    private Lexer m_lexer;\n    \n    public Parser(Lexer lexer) {\n        m_lexer = lexer;\n    }\n    \n    public ASTExprNode parseExpression(String val) throws Exception {\n        m_lexer.init(val);\n        return getExpr();\n    }\n    \n    ASTExprNode getExpr() throws Exception {\n        return getQuestionMarkExpr();\n    }\n    \n    ASTExprNode getParantheseExpr() throws Exception {\n        Token curToken = m_lexer.lookAhead();\n        m_lexer.expect(Token.Type.INTEGER);\n        return new ASTIntegerLiteralNode(curToken.m_value);\n    }\n    \n    // unaryexpr: (NOT | MINUS) ? paranthesisexpr\n    ASTExprNode getUnaryExpr() throws Exception {\n        var token = m_lexer.lookAhead().m_type;\n\n        if (token == TokenIntf.Type.MINUS || token == TokenIntf.Type.NOT) {\n            m_lexer.advance();\n        }\n\n        var parenExpr = getParantheseExpr();\n        return new ASTUnaryExprNode(parenExpr, token);\n    }\n    \n    ASTExprNode getMulDivExpr() throws Exception {\n        return getUnaryExpr();\n    }\n    \n    ASTExprNode getPlusMinusExpr() throws Exception {\n        ASTExprNode result = getMulDivExpr();\n        Token nextToken = m_lexer.lookAhead();\n        while (nextToken.m_type == Token.Type.PLUS || nextToken.m_type == Token.Type.MINUS) {\n            m_lexer.advance();\n            result = new ASTPlusMinusExprNode(result, getMulDivExpr(), nextToken.m_type);\n            nextToken = m_lexer.lookAhead();\n        }\n        return result;\n    }\n\n    ASTExprNode getBitAndOrExpr() throws Exception {\n        return getPlusMinusExpr();\n    }\n\n    ASTExprNode getShiftExpr() throws Exception {\n        return getBitAndOrExpr();\n    }\n\n    ASTExprNode getCompareExpr() throws Exception {\n        return getShiftExpr();\n    }\n\n    ASTExprNode getAndOrExpr() throws Exception {\n        ASTExprNode result = getCompareExpr();\n        Token nextToken = m_lexer.lookAhead();\n        while (nextToken.m_type == Token.Type.AND || nextToken.m_type == Token.Type.OR) {\n            m_lexer.advance();\n            result = new ASTAndOrExprNode(result, getCompareExpr(), nextToken.m_type);\n            nextToken = m_lexer.lookAhead();\n        }\n        return result;\n    }\n\n    ASTExprNode getQuestionMarkExpr() throws Exception {\n\n        ASTExprNode toResolve = getAndOrExpr();\n        while (m_lexer.lookAhead().m_type == Token.Type.QUESTIONMARK) {\n          m_lexer.expect(Token.Type.QUESTIONMARK);\n          ASTExprNode trueNum = getAndOrExpr();\n          m_lexer.expect(Token.Type.DOUBLECOLON);\n          ASTExprNode falseNum = getAndOrExpr();\n          toResolve = new ASTQuestionmarkExprNode(toResolve, trueNum, falseNum);\n        }\n        return toResolve;\n    }\n  \n    // blockstmt: LBRACE stmtlist RBRACE\n    // stmtlist: stmt stmtlist\n    // stmtlist: epsilon\n    ASTStmtNode getBlockStmt() throws Exception {\n        return null;\n    }\n    \n    // stmt: declareStmt\n    // stmt: assignStmt\n    // stmt: printStmt\n    ASTStmtNode getStmt() throws Exception {\n        return null;\n    }\n\n    // declareStmt: DECLARE IDENTIFIER SEMICOLON\n    ASTStmtNode getDeclareStmt() throws Exception {\n        return null;\n    }\n\n    // assignStmt: IDENTIFER ASSIGN expr SEMICOLON\n    ASTStmtNode getAssignStmt() throws Exception {\n        return null;\n    }\n\n    // printStmt: PRINT expr SEMICOLON\n    ASTStmtNode getPrintStmt() throws Exception {\n        return null;\n    }\n\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/compiler/Parser.java b/compiler/Parser.java
+--- a/compiler/Parser.java	(revision bb4e2e7add5292b336bdac54670fc534e172b2b8)
++++ b/compiler/Parser.java	(date 1653298717346)
+@@ -115,4 +115,6 @@
+         return null;
+     }
+ 
++
++
+ }
+\ No newline at end of file
+Index: compiler/ast/ASTVariableExprNode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/compiler/ast/ASTVariableExprNode.java b/compiler/ast/ASTVariableExprNode.java
+new file mode 100644
+--- /dev/null	(date 1653298717341)
++++ b/compiler/ast/ASTVariableExprNode.java	(date 1653298717341)
+@@ -0,0 +1,16 @@
++package compiler.ast;
++
++import java.io.OutputStreamWriter;
++
++public class ASTVariableExprNode extends ASTExprNode{
++
++    @Override
++    public void print(OutputStreamWriter outStream, String indent) throws Exception {
++
++    }
++
++    @Override
++    public int eval() {
++        return 0;
++    }
++}
