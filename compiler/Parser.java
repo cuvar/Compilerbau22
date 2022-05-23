@@ -59,11 +59,11 @@ public class Parser {
     }
 
     ASTExprNode getCompareExpr() throws Exception {
-        ASTExprNode result = getCompareExpr();
+        ASTExprNode result = getShiftExpr();
         Token nextToken = m_lexer.lookAhead();
         while (nextToken.m_type == Token.Type.AND || nextToken.m_type == Token.Type.OR) {
             m_lexer.advance();
-            result = new ASTAndOrExprNode(result, getCompareExpr(), nextToken.m_type);
+            result = new ASTCompareExprNode(result, getShiftExpr(), nextToken.m_type);
             nextToken = m_lexer.lookAhead();
         }
         return result;
