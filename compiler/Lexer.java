@@ -45,8 +45,6 @@ public class Lexer {
     }
 
     private void addLexerMachines() {
-        compiler.StateMachineBase identifierMachine = new StateMachineIdentifier();
-        addMachine(identifierMachine);
         compiler.StateMachineBase ganzzahlMachine = new StateMachineGanzzahl();
         addMachine(ganzzahlMachine);
         compiler.StateMachineBase decimalsMachine = new StateMachineDecimals();
@@ -87,6 +85,8 @@ public class Lexer {
         addKeywordMachine("PRINT", compiler.TokenIntf.Type.PRINT);
         addKeywordMachine("if", compiler.TokenIntf.Type.IF);
         addKeywordMachine("else", compiler.TokenIntf.Type.ELSE);
+        compiler.StateMachineBase identifierMachine = new StateMachineIdentifier();
+        addMachine(identifierMachine);
     }
 
     public void addKeywordMachine(String keyword, TokenIntf.Type tokenType) {

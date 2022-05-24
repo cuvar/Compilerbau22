@@ -1,14 +1,14 @@
 import java.io.OutputStreamWriter;
 
-public class ExpressionParserMain {
+public class StamentParserMain {
 
     public static void main(String[] args) throws Exception {
         compiler.Lexer lexer = new compiler.Lexer();
-        compiler.Parser exprParser = new compiler.Parser(lexer);
-        System.out.println(expr.eval());
-        compiler.ast.ASTExprNode expr = exprParser.parseExpression("6 & 3");
+        compiler.Parser parser = new compiler.Parser(lexer);
+        compiler.ast.ASTStmtNode stmt = parser.parseStmt("{ DECLARE a; PRINT 5+2+a; }");
+        stmt.execute();
         OutputStreamWriter outStream = new OutputStreamWriter(System.out, "UTF-8");
-        expr.print(outStream, "");
+        stmt.print(outStream, "");
         outStream.flush();
     }
 

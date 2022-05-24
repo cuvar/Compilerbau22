@@ -5,14 +5,25 @@ import java.io.OutputStreamWriter;
 
 public class Parser {
     private Lexer m_lexer;
+    private SymbolTable m_symbolTable;
     
     public Parser(Lexer lexer) {
         m_lexer = lexer;
+        m_symbolTable = new SymbolTable();
+    }
+    
+    public SymbolTable getSymbolTable() {
+        return m_symbolTable;
     }
     
     public ASTExprNode parseExpression(String val) throws Exception {
         m_lexer.init(val);
         return getExpr();
+    }
+    
+    public ASTStmtNode parseStmt(String val) throws Exception {
+        m_lexer.init(val);
+        return getBlockStmt();
     }
     
     ASTExprNode getExpr() throws Exception {
@@ -61,7 +72,19 @@ public class Parser {
     }
 
     ASTExprNode getBitAndOrExpr() throws Exception {
-        return getPlusMinusExpr();
+        ASTExprNode result = getPlusMinusExpr();
+        Token nextToken = m_lexer.lookAhead();
+        while (nextToken.m_type == Token.Type.BITAND || nextToken.m_type == Token.Type.BITOR) {
+            if (nextToken.m_type == Token.Type.BITAND) {
+                m_lexer.advance();
+                result = new ASTBitAndOrExprNode(result, getPlusMinusExpr(), Token.Type.BITAND);
+            } else {
+                m_lexer.advance();
+                result = new ASTBitAndOrExprNode(result, getPlusMinusExpr(), Token.Type.BITOR);
+            }
+            nextToken = m_lexer.lookAhead();
+        }
+        return result;
     }
 
     ASTExprNode getShiftExpr() throws Exception {
@@ -69,7 +92,14 @@ public class Parser {
     }
 
     ASTExprNode getCompareExpr() throws Exception {
-        return getShiftExpr();
+        ASTExprNode result = getShiftExpr();
+        Token nextToken = m_lexer.lookAhead();
+        while (nextToken.m_type == Token.Type.AND || nextToken.m_type == Token.Type.OR) {
+            m_lexer.advance();
+            result = new ASTCompareExprNode(result, getShiftExpr(), nextToken.m_type);
+            nextToken = m_lexer.lookAhead();
+        }
+        return result;
     }
 
     ASTExprNode getAndOrExpr() throws Exception {
@@ -102,7 +132,7 @@ public class Parser {
     ASTStmtNode getBlockStmt() throws Exception {
         ASTBlockStmtNode result = new ASTBlockStmtNode();
         m_lexer.expect(Token.Type.LBRACE);
-        while (!m_lexer.lookAhead().equals(Token.Type.RBRACE)) {
+        while (m_lexer.lookAhead().m_type != Token.Type.RBRACE) {
             result.addStatement(getStmt());
         }
         m_lexer.expect(Token.Type.RBRACE);
@@ -132,7 +162,20 @@ public class Parser {
 
     // declareStmt: DECLARE IDENTIFIER SEMICOLON
     ASTStmtNode getDeclareStmt() throws Exception {
-        return null;
+        m_lexer.expect(TokenIntf.Type.DECLARE);
+
+        Token identifier = m_lexer.lookAhead();
+        m_lexer.expect(TokenIntf.Type.IDENT);
+
+        m_lexer.expect(TokenIntf.Type.SEMICOLON);
+
+        if(m_symbolTable.getSymbol(identifier.m_value) != null) {
+            throw new Exception("Das Symbol \"" + identifier.m_value + "\" ist bereits vergeben!\n");
+        }
+
+        m_symbolTable.createSymbol(identifier.m_value);
+        
+        return new ASTDeclareNode(m_symbolTable, identifier.m_value);
     }
 
     // assignStmt: IDENTIFER ASSIGN expr SEMICOLON
@@ -142,7 +185,23 @@ public class Parser {
 
     // printStmt: PRINT expr SEMICOLON
     ASTStmtNode getPrintStmt() throws Exception {
-        return null;
+        m_lexer.expect(TokenIntf.Type.PRINT);
+        var node = getExpr();
+        m_lexer.expect(TokenIntf.Type.SEMICOLON);
+        return new ASTPrintStmtNode(node);
     }
+
+    // variableExpr: IDENTIFIER
+    ASTExprNode getVariableExpr() throws Exception {
+        Token token = m_lexer.lookAhead();
+        if (token.m_type == Token.Type.IDENT){
+            m_lexer.advance();
+            return new ASTVariableExprNode(token.m_value, getSymbolTable());
+        }
+        throw new Exception("Unexpected Statement");
+
+    }
+
+
 
 }
