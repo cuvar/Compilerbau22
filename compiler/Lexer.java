@@ -73,6 +73,8 @@ public class Lexer {
         addKeywordMachine(":", compiler.TokenIntf.Type.DOUBLECOLON);
         addKeywordMachine("(", compiler.TokenIntf.Type.LPAREN);
         addKeywordMachine(")", compiler.TokenIntf.Type.RPAREN);
+        addKeywordMachine("{", compiler.TokenIntf.Type.LBRACE);
+        addKeywordMachine("}", compiler.TokenIntf.Type.RBRACE);
         compiler.StateMachineBase lineCommentMachine = new StateMachineLineComment();
         addMachine(lineCommentMachine);
         compiler.StateMachineBase multiLineCommentMachine = new StateMachineMultiLineComment();
